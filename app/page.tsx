@@ -1,9 +1,17 @@
-import Image from "next/image";
+import { auth, EnrichedSession } from "../auth";
+import { GoogleSignInButton } from "./components/GoogleSignInButtom";
 
-export default function Home() {
+export default async function Home() {
+  const session = (await auth()) as EnrichedSession;
+
   return (
     <main>
-      <p>Hello from Away from Owen</p>
+      {session?.user?.name ? (
+        <p>Welcome {session?.user?.name}</p>
+      ) : (
+        <p>Login to continue</p>
+      )}
+      <GoogleSignInButton />
     </main>
   );
 }
