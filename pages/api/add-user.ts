@@ -4,56 +4,54 @@ import User from "@/models/User";
 
 // api route handler to handle adding user to db and validation
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse){
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  // connect to db
+  await ConnectDB();
 
-    // connect to db
-    await ConnectDB();
+  // check req type
+  // if post extract data from request
+  if (req.method === "POST") {
+    const { email, first_name, last_name } = req.body;
 
-    // check req type
-    // if post extract data from request
-    if( req.method === 'POST'){
+    // validate email and name
+    if (!email) {
+      return res.status(400).json({ error: "E-mail is required!" });
+    }
 
-        const { email, first_name, last_name } = req.body;
+    if (!first_name || !last_name) {
+      return res.status(400).json({ error: "Name is required!" });
+    }
 
-        // validate email and name
-        if( !email ){
-            return res.status(400).json({ error: "E-mail is required!"});
-        }
+    // check user is new or existing user
+    try {
+      const isExistingUser = await User.findOne({ email });
 
-        if ( !first_name || !last_name ){
-            return res.status(400).json({ error: "Name is required!"})
-        }
+      // if user is new then save it to database
 
-        // check user is new or existing user
-        try{
-            const isExistingUser  = await User.findOne( {email} );
-        
-            // if user is new then save it to database
+      if (!isExistingUser) {
+        // by default making isPaidUser false
+        // ** Will change it later according to the user flow **
+        const newUser = new User({
+          email,
+          first_name,
+          last_name,
+          isPaidUser: false,
+        });
+        await newUser.save();
 
-            if( !isExistingUser ){
-
-                // by default making isPaidUser false
-                // ** Will change it later according to the user flow **
-                const newUser = new User({ email, first_name, last_name, isPaidUser:false});
-                await newUser.save();
-
-                return res.status(201).json(newUser);
-            } else {
-
-                // if user is existing then dont need to save it to database
-                return res.status(200).json("User already exists");
-            } 
-            
-            
-        } catch( error ){
-            return res.status(500).json({ error: "Internal server error"});
-        }
-        
-
-    } else {
-
-        
-         // If the request method is not POST
-        res.status(405).json({ error: 'Method not allowed' });
-    }  
+        return res.status(201).json(newUser);
+      } else {
+        // if user is existing then dont need to save it to database
+        return res.status(200).json("User already exists");
+      }
+    } catch (error) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  } else {
+    // If the request method is not POST
+    res.status(405).json({ error: "Method not allowed" });
+  }
 }
