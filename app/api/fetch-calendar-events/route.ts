@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 import { auth, EnrichedSession } from "../../../auth";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const session = (await auth()) as EnrichedSession;
@@ -8,9 +9,12 @@ export async function GET(request: Request) {
   console.log("Session inside the route ", session);
 
   if (!session) {
-    return new Response("Unauthorized", {
-      status: 401,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        message: "unauthorized!",
+      }),
+      { status: 401 }
+    );
   }
 
   const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -35,20 +39,32 @@ export async function GET(request: Request) {
   });
 
   // Use the Google Calendar API to access the calendar
-  const calendarRes = await calendar.events.list({
-    calendarId: "primary",
-    timeMin: new Date().toISOString(),
-    maxResults: 10,
-    singleEvents: true,
-    orderBy: "startTime",
-  });
+  try {
+    const calendarRes = await calendar.events.list({
+      calendarId: "primary",
+      timeMin: new Date().toISOString(),
+      maxResults: 10,
+      singleEvents: true,
+      orderBy: "startTime",
+    });
 
-  const events = calendarRes.data.items;
-  if (events?.length) {
-    console.log("Upcoming 10 events:");
-  } else {
-    console.log("No upcoming events found.");
+    const events = calendarRes.data.items;
+    if (events?.length) {
+      console.log("Upcoming 10 events:");
+    } else {
+      console.log("No upcoming events found.");
+    }
+
+    return new NextResponse(
+      JSON.stringify({
+        message: "Events fetched successfully!",
+        data: events,
+      }),
+      {
+        status: 201,
+      }
+    );
+  } catch (err) {
+    return new NextResponse("Error in fetching events " + err, { status: 500 });
   }
-
-  return Response.json({ events });
 }
