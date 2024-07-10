@@ -4,14 +4,16 @@ import mongoose, { Schema, Document, Model} from "mongoose";
 interface IUser extends Document {
 
     email: string;
-    name: string;
+    first_name: string;
+    last_name: string;
     isPaidUser: boolean;
 }
 
 const UserSchema: Schema<IUser>  = new Schema({
 
     email: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
     isPaidUser: { type: Boolean, required: true }
 
 });

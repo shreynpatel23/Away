@@ -13,14 +13,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // if post extract data from request
     if( req.method === 'POST'){
 
-        const { email, name } = req.body;
+        const { email, first_name, last_name } = req.body;
 
         // validate email and name
         if( !email ){
             return res.status(400).json({ error: "E-mail is required!"});
         }
 
-        if ( !name ){
+        if ( !first_name || !last_name ){
             return res.status(400).json({ error: "Name is required!"})
         }
 
@@ -34,14 +34,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 // by default making isPaidUser false
                 // ** Will change it later according to the user flow **
-                const newUser = new User({ email, name, isPaidUser:false});
+                const newUser = new User({ email, first_name, last_name, isPaidUser:false});
                 await newUser.save();
 
-                return res.status(201).json(newUser);
+                return res.status(200).json(newUser);
             } else {
 
                 // if user is existing then dont need to save it to database
-                return res.status(201).json("User already exists");
+                return res.status(200).json("User already exists");
             } 
             
             
