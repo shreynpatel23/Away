@@ -48,7 +48,6 @@ export const config = {
       } else if (Date.now() < Number(token.expires_at)) {
         return token;
       } else {
-        console.log("Access token expired getting new one");
         try {
           const response = await fetch("https://oauth2.googleapis.com/token", {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -81,7 +80,6 @@ export const config = {
       }
     },
     async session({ session, token }) {
-      console.log("Incoming session info: ", session);
       // This will be accessible in the client side using useSession hook
       // So becareful what you return here. Don't return sensitive data.
       // The auth() function should return jwt response but instead it returns

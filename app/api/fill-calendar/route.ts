@@ -98,8 +98,6 @@ export async function POST(request: Request) {
 
   const session = (await auth()) as EnrichedSession;
 
-  console.log("Session inside the route ", session);
-
   if (!session) {
     return new NextResponse(
       JSON.stringify({

@@ -6,8 +6,6 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const session = (await auth()) as EnrichedSession;
 
-  console.log("Session inside the route ", session);
-
   if (!session) {
     return new NextResponse(
       JSON.stringify({
@@ -43,17 +41,12 @@ export async function GET(request: Request) {
     const calendarRes = await calendar.events.list({
       calendarId: "primary",
       timeMin: new Date().toISOString(),
-      maxResults: 10,
+      maxResults: 100,
       singleEvents: true,
       orderBy: "startTime",
     });
 
     const events = calendarRes.data.items;
-    if (events?.length) {
-      console.log("Upcoming 10 events:");
-    } else {
-      console.log("No upcoming events found.");
-    }
 
     return new NextResponse(
       JSON.stringify({
