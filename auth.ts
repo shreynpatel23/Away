@@ -40,48 +40,35 @@ export const config = {
     },
     // callback when user will signin
     // to add user to database
-    async signIn( { user, account, profile}){
-      
+    async signIn({ user, account, profile }) {
       //  if user's email and name exist
-      if( user.email && user.name ){
-
+      if (user.email && user.name) {
         // get email and name from object
-        try{
-
-         
-
+        try {
           // get first name and last name from full name
-          const fullName = user.name.split(' ');
+          const fullName = user.name.split(" ");
           const fisrtName = fullName[0];
           const lastName = fullName[1];
 
-
-
-         // call the addUser api to save user
-         const response = await axios.post(`${process.env.NEXTAUTH_URL}/api/add-user`, {
-            email: user.email,
-            first_name : fisrtName,
-            last_name : lastName,
-          });
-
-       
-
-     
-
+          // call the addUser api to save user
+          const response = await axios.post(
+            `${process.env.NEXTAUTH_URL}/api/add-user`,
+            {
+              email: user.email,
+              first_name: fisrtName,
+              last_name: lastName,
+            }
+          );
         } catch (error) {
           console.error("Error while saving user to database:", error);
-          
+
           // don't allow user to signin
           return false;
         }
-
-
-
       }
-    
+
       // allow user to sign in
       return true;
-
     },
     async jwt({ token, user, account }) {
       // Initial sign in
