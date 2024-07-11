@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
-import { auth, EnrichedSession } from "../../../auth";
+import { auth, EnrichedSession } from "@/auth";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
