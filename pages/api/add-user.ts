@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const newUser = new User({ email, first_name, last_name, isPaidUser:false});
                 await newUser.save();
 
-                return res.status(200).json(newUser);
+                return res.status(201).json(newUser);
             } else {
 
                 // if user is existing then dont need to save it to database
