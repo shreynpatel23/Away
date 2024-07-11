@@ -10,8 +10,25 @@ const config: Config = {
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        'custom-gradient': 'linear-gradient(115.51deg, #EEF7FF -4.44%, #CDE8E5 128.04%)'
+      },
+      fontFamily: {
+        'open-sans': ['Open Sans', 'sans-serif'],
+      },
+      lineHeight: {
+        'custom-21.79': '21.79px',
+        '27.24': '27.24px',
+      },
+      colors: {
+        'secondary-heading-color': '#69817F',
+        'dark-blue': '#4D869C',
+      },
+      fontWeight: {
+        '700': '700',
+      },
+      fontSize: {
+        '20': ['20px', '27.24px'],
       },
       colors: {
         gradientColor1: "#EEF7FF",
