@@ -48,7 +48,7 @@ export const config = {
         // get email and name from object
         try{
 
-          console.log("---- CALLING API -------");
+         
 
           // get first name and last name from full name
           const fullName = user.name.split(' ');
@@ -64,8 +64,7 @@ export const config = {
             last_name : lastName,
           });
 
-          console.log("API RESPONSE - ", response.data);
-
+       
 
      
 

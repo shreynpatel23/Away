@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const { email } = req.body;
 
-        console.log("from req", email);
+      
 
         // validate email 
         if( !email ){

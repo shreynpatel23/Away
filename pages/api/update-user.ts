@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             return res.status(200).json(updatedUser);
         } catch (error) {
-            console.error('Error adding user:', error);
+          
             return res.status(500).json({ error: 'Internal server error' });
         }
     } else {
