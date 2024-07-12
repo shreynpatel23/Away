@@ -1,4 +1,4 @@
-import Cards from "@/app/Cards/page";
+import Cards from "@/app/components/Cards/page";
 
 export default function LoginPage() {
     return<>
