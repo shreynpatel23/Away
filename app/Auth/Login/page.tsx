@@ -1,4 +1,5 @@
 import Cards from "@/app/components/Cards/page";
+import { GoogleSignInButton } from "@/app/components/GoogleSignInButtom";
 
 export default function LoginPage() {
     return<>
@@ -8,6 +9,7 @@ export default function LoginPage() {
                 credentials="Login using Google"
                 options="Do not have an account?"
                 checkin="Sign up"
+                signInButton={<GoogleSignInButton />}
          />
     </>
 }

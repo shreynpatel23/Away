@@ -1,5 +1,7 @@
 import Link from "next/link"
 import Header from "../Header";
+import { ReactNode } from "react";
+
 interface CardsProps{ 
     message: string;
     description: string;
@@ -7,8 +9,9 @@ interface CardsProps{
     credentials: string;
     options: string;
     checkin: string;
+    signInButton: ReactNode;
 }
-export default function Cards({ message, description, instructions, credentials, options, checkin}: CardsProps){
+export default function Cards({ message, description, instructions, credentials, options, checkin, signInButton}: CardsProps){
     return(
         <div>
             <img src="/AwayMeLogo.png" alt="logo" className="h-12 m-4" />
@@ -23,10 +26,9 @@ export default function Cards({ message, description, instructions, credentials,
                         <br />
                         <div className="flex justify-center items-center">
                             
-                            <Link className="flex items-center w-[277px] h-[56px] rounded-[8px] p-[16px] pt-[16px] pr-[32px] pb-[16px] pl-[32px] gap-[16px] bg-accent text-white text-center whitespace-nowrap shadow-xl" href="">
-                            <img src="/google-logo.png" className="w-8 h-8 mr-2" alt="google-login"/>
-                                <span>{credentials}</span>
-                            </Link>
+                        <div className="flex justify-center items-center">
+                            {signInButton}
+                        </div>
                         </div>
 
                         <br /><br />
