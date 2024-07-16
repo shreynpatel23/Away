@@ -23,7 +23,7 @@ export default function MyCalendar(props: ICalendarProps) {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: 700 }}
+        style={{ height: 500 }}
         popup
         onNavigate={(date) => {
           setDate(new Date(date));
