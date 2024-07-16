@@ -24,8 +24,8 @@ export default function Button(props: IButtonProps) {
         <p className="text-accent font-bold text-base">Loading...</p>
       ) : (
         <>
-          {buttonText}
           {hasIcon && <>{icon}</>}
+          {buttonText}
         </>
       )}
     </button>

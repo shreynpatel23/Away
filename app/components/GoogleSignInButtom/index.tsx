@@ -1,18 +1,30 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import Button from "../Button";
+import { useRouter } from "next/navigation";
 
 export function GoogleSignInButton() {
+  const router = useRouter();
+  const session = useSession();
+
   const handleClick = () => {
-    signIn("google");
+    if (session.status !== "authenticated") {
+      signIn("google"); // will re-direct to sign in page
+    } else {
+      // navigate to view calendar page
+      router.push("/view-calendar");
+    }
   };
 
   return (
-    <button
+    <Button
+      buttonText="Continue with Google"
+      buttonClassName="rounded-md shadow-button hover:shadow-buttonHover bg-accent text-white text-base leading-base"
       onClick={() => handleClick()}
-      className="w-[300px] flex items-center font-semibold justify-center h-14 px-6 mt-4 text-xl  transition-colors duration-300 bg-white border-2 border-black text-black rounded-lg focus:shadow-outline hover:bg-slate-200"
-    >
-      {/* <Image src={googleLogo} alt="Google Logo" width={20} height={20} /> */}
-      <span className="ml-4">Continue with Google</span>
-    </button>
+      hasIcon
+      icon={
+        <img src="/google-logo.png" alt="Google icon" className="w-[20px]" />
+      }
+    />
   );
 }
