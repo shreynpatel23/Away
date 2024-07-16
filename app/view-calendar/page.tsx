@@ -29,7 +29,7 @@ export default function ViewCalendar() {
         setEvents(events);
         setLoading(false);
       } catch (err) {
-        console.error("Error fetching events:", err);
+        console.error("Error in fetching events:", err);
         setEvents([]);
         setLoading(false);
       }
@@ -51,11 +51,21 @@ export default function ViewCalendar() {
   return (
     <div className="w-full h-[100vh] overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-4 px-8">
       <Header />
-      <div className="w-[75%] mx-auto">
+      <div className="w-[90%] mx-auto">
         <Banner />
-        <UserDetails />
-        <div className="bg-white p-4 rounded-md">
-          <MyCalendar events={events} />
+        <div className="my-12 flex items-start gap-4">
+          <div className="w-[40%]">
+            <UserDetails
+              onFill={() => {
+                router.push("/fill-calendar");
+              }}
+            />
+          </div>
+          <div className="w-[60%]">
+            <div className="bg-white p-4 rounded-[16px]">
+              <MyCalendar events={events} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
