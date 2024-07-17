@@ -10,7 +10,9 @@ import Link from "next/link";
 export default function FillCalendar() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [fillCalendarLoading, setFillCalendarLoading] = useState(false);
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
 
   const fetchComputedFill = useCallback(async () => {
     setLoading(true);
@@ -20,13 +22,14 @@ export default function FillCalendar() {
         return router.replace("/");
       }
       const { data } = await response.json();
-      const events = data?.map((eventData: any, index: number) => ({
+      setEvents(data);
+      const updatedEvents = data?.map((eventData: any, index: number) => ({
         id: index + 1,
         title: eventData?.summary,
         start: new Date(eventData?.start?.dateTime),
         end: new Date(eventData?.end?.dateTime),
       }));
-      setEvents(events);
+      setFilteredEvents(updatedEvents);
       setLoading(false);
     } catch (err) {
       console.error("Error in fetching events:", err);
@@ -34,6 +37,29 @@ export default function FillCalendar() {
       setLoading(false);
     }
   }, []);
+
+  const handleFillCalendar = async () => {
+    setFillCalendarLoading(true);
+    try {
+      const response = await fetch("/api/fill-calendar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ events }),
+      });
+      if (response.status === 401) {
+        return router.replace("/");
+      }
+      setFillCalendarLoading(false);
+      if (response.status === 201) {
+        router.push("/view-calendar");
+      }
+    } catch (err) {
+      console.error("Error in creating events:", err);
+      setFillCalendarLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchComputedFill();
@@ -44,6 +70,16 @@ export default function FillCalendar() {
       <div className="w-full h-[100vh] flex items-center justify-center bg-hover">
         <p className="text-lg leading-lg text-heading">
           Fetching your fill percentage events...
+        </p>
+      </div>
+    );
+  }
+
+  if (fillCalendarLoading) {
+    return (
+      <div className="w-full h-[100vh] flex items-center justify-center bg-hover">
+        <p className="text-lg leading-lg text-heading">
+          Filling your calendar. Please hang on a moment...
         </p>
       </div>
     );
@@ -70,14 +106,14 @@ export default function FillCalendar() {
           <div className="w-[40%]">
             <FillCalendarCard
               onConfirm={() => {
-                console.log("call the schedule event api here!");
+                handleFillCalendar();
               }}
               onReFill={() => fetchComputedFill()}
             />
           </div>
           <div className="w-[60%]">
             <div className="bg-white p-4 rounded-[16px]">
-              <MyCalendar events={events} />
+              <MyCalendar events={filteredEvents} />
             </div>
           </div>
         </div>

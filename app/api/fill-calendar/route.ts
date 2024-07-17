@@ -129,25 +129,17 @@ export async function POST(request: Request) {
   });
 
   try {
-    const promises = events.map((event: any) =>
-      calendar.events
-        .insert({
-          calendarId: "primary",
-          requestBody: event,
-        })
-        .catch((error) => ({ error: error.message, event }))
-    );
-
-    const results = await Promise.all(promises);
-
-    const successfulEvents = results.filter((result: any) => !result.error);
-    const failedEvents = results.filter((result: any) => result.error);
+    for (const event of events) {
+      await calendar.events.insert({
+        calendarId: "primary",
+        requestBody: event,
+      });
+    }
     return new NextResponse(
       JSON.stringify({
         message: "Events created successfully!",
         data: {
-          successfulEvents,
-          failedEvents,
+          events,
         },
       }),
       {
