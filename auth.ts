@@ -1,7 +1,9 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import axios from "axios";
 
 import type { NextAuthConfig, Session } from "next-auth";
+import email from "next-auth/providers/email";
 
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -30,10 +32,43 @@ export const config = {
       },
     }),
   ],
+  secret: process.env.NEXT_PUBLIC_SECRET,
   basePath: "/api/auth",
   callbacks: {
     authorized({ request, auth }) {
       return !!auth;
+    },
+    // callback when user will signin
+    // to add user to database
+    async signIn({ user, account, profile }) {
+      //  if user's email and name exist
+      if (user.email && user.name) {
+        // get email and name from object
+        try {
+          // get first name and last name from full name
+          const fullName = user.name.split(" ");
+          const fisrtName = fullName[0];
+          const lastName = fullName[1];
+
+          // call the addUser api to save user
+          const response = await axios.post(
+            `${process.env.NEXTAUTH_URL}/api/add-user`,
+            {
+              email: user.email,
+              first_name: fisrtName,
+              last_name: lastName,
+            }
+          );
+        } catch (error) {
+          console.error("Error while saving user to database:", error);
+
+          // don't allow user to signin
+          return false;
+        }
+      }
+
+      // allow user to sign in
+      return true;
     },
     async jwt({ token, user, account }) {
       // Initial sign in
