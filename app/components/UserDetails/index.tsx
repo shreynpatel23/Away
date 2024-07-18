@@ -7,7 +7,7 @@ export default function UserDetails(props: IUserDetailsProps) {
   const { onFill } = props;
   const { data: session } = useSession();
   return (
-    <div className="p-6 bg-white card-shadow rounded-[16px]">
+    <div className="p-6 bg-white shadow-card rounded-[16px]">
       <div className="flex items-start gap-4 w-full">
         <img
           src={session?.user?.image || ""}

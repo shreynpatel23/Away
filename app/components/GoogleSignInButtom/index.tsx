@@ -7,9 +7,9 @@ export function GoogleSignInButton() {
   const router = useRouter();
   const session = useSession();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (session.status !== "authenticated") {
-      signIn("google"); // will re-direct to sign in page
+      await signIn("google"); // will re-direct to sign in page
     } else {
       // navigate to view calendar page
       router.push("/view-calendar");

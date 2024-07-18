@@ -17,7 +17,7 @@ export default function ViewCalendar() {
       try {
         const response = await fetch("/api/fetch-calendar-events");
         if (response.status === 401) {
-          return router.replace("/");
+          return router.replace("/login");
         }
         const { data } = await response.json();
         const events = data?.map((eventData: any, index: number) => ({

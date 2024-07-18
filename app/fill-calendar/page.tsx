@@ -19,7 +19,7 @@ export default function FillCalendar() {
     try {
       const response = await fetch("/api/fill-calendar");
       if (response.status === 401) {
-        return router.replace("/");
+        return router.replace("/login");
       }
       const { data } = await response.json();
       setEvents(data);
@@ -49,7 +49,7 @@ export default function FillCalendar() {
         body: JSON.stringify({ events }),
       });
       if (response.status === 401) {
-        return router.replace("/");
+        return router.replace("/login");
       }
       setFillCalendarLoading(false);
       if (response.status === 201) {
