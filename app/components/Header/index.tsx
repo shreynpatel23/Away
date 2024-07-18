@@ -10,7 +10,7 @@ export default function Header() {
         <div className="">
           <img
             src={session?.user?.image || ""}
-            alt="User avatar image"
+            alt=" User avatar image"
             className="w-[40px] rounded-full bg-gray-200"
           />
         </div>
