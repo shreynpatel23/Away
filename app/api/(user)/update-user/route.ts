@@ -37,11 +37,16 @@ export async function POST(req: NextRequest) {
       return new NextResponse(JSON.stringify({ error: "User with given email not found" }), { status: 404 });
     }
 
-    // Check if the new email is already in use by another user
-    const isEmailInUse = await User.findOne({ email: new_email });
+     // Check if the new email is different from the old email
+     if (email !== new_email) {
 
-    if (isEmailInUse) {
-      return new NextResponse(JSON.stringify({ error: "New email is already in use" }), { status: 409 });
+        // Check if the new email is already in use by another user
+        const isEmailInUse = await User.findOne({ email: new_email });
+
+        if (isEmailInUse) {
+          return new NextResponse(JSON.stringify({ error: "New email is already in use" }), { status: 409 });
+        }
+
     }
 
     // Update the user and return the updated user values
