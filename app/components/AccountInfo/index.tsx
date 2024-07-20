@@ -1,24 +1,94 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../Button/index';
+import UpdateButton from '../UpdateButton/index';
+import { useSession } from 'next-auth/react';
 
 const Form = () => {
-  const [firstName, setFirstName] = useState('Jhon');
-  const [lastName, setLastName] = useState('Doe');
-  const [email, setEmail] = useState('jhondoe@gmail.com');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [defaultFirstName, setDefaultFirstName] = useState('');
+  const [defaultLastName, setDefaultLastName] = useState('');
+  const [defaultEmail, setDefaultEmail] = useState('');
+  const [error, setError] = useState('');
 
-  const handleUpdate = (e: { preventDefault: () => void; }) => {
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    const fetchUser = async () => {
+      try { 
+        const email = (session?.user?.email);
+        const response = await fetch('/api/get-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+        console.log(data.email);
+        if (response.ok) {
+          setFirstName(data.first_name);
+          setLastName(data.last_name);
+          setEmail(data.email);
+          setDefaultFirstName(data.first_name);
+          setDefaultLastName(data.last_name);
+          setDefaultEmail(data.email);
+        } else {
+          setError(data.error);
+        }
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError('Failed to load user data.');
+      }
+    };
+
+    fetchUser();
+  }, [email]);
+
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Form submitted');
+    try {
+      const response = await fetch('/api/update-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: defaultEmail,
+          new_email: email,
+          first_name: firstName,
+          last_name: lastName,
+        }),
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        setFirstName(data.first_name);
+        setLastName(data.last_name);
+        setEmail(data.email);
+        setDefaultFirstName(data.first_name);
+        setDefaultLastName(data.last_name);
+        setDefaultEmail(data.email);
+      } else {
+        setError(data.error);
+      }
+    } catch (err) {
+      console.error('Error updating user data:', err);
+      setError('Failed to update user data.');
+    }
   };
 
   const handleCancel = () => {
-    // Reset form or perform cancel action
+    setFirstName(defaultFirstName);
+    setLastName(defaultLastName);
+    setEmail(defaultEmail);
   };
 
   return (
     <form className="bg-white p-14 rounded-xl shadow-xl w-full max-w-xl" onSubmit={handleUpdate}>
+      {error && <div>Error: {error}</div>}
       <div className="mb-4 flex space-x-10">
         <div className="w-1/2">
           <label className="block mb-2">First Name</label>
@@ -50,9 +120,7 @@ const Form = () => {
       </div>
       <div className="flex justify-start">
         <Button buttonText={'Cancel'} buttonClassName={'bg-gradientColor1 text-accent py-2 px-4 rounded mr-2 drop-shadow-lg'} onClick={handleCancel} />
-        <Button buttonText={'Update'} buttonClassName={'bg-accent text-white py-2 px-4 rounded mr-2 drop-shadow-lg'} onClick={function (): void {
-          throw new Error('Function not implemented.');
-        }} />
+        <UpdateButton buttonText={'Update'} buttonClassName={'bg-accent text-white py-2 px-4 rounded mr-2 drop-shadow-lg'} onClick={handleUpdate} />
       </div>
     </form>
   );
