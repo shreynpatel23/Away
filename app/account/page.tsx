@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../components/Header/index";
 import Banner from "../components/Banner/index";
 import Tabs from "../components/Tabs/index";
-import Form from "../components/AccountInfo";
+import Form from "../components/AccountForm";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
