@@ -15,5 +15,3 @@ export default async function Home() {
     </main>
   );
 }
-
-//<body className={`bg-custom-gradient ${inter.className}`}>

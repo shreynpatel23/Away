@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-custom-gradient overflow-hidden`}>
+      <body className={`${inter.className} bg-custom-background`}>
         <SessionProvider>{children}</SessionProvider>
       </body>
     </html>

@@ -22,7 +22,7 @@ export default function Cards({
 }: CardsProps) {
   return (
     <div>
-      <img src="/AwayMeLogo.png" alt="logo" className="h-12 m-4" />
+      <img src="/logo.png" alt="logo" className="h-12 m-4" />
       <div className="flex justify-center items-center min-h-screen inset-0">
         <div className="w-520 h-524 top-250 left-460 rounded-lg border border-gray-300 absolute shadow-xl p-16 bg-white">
           <div className="w-[20.08vw] h-[45.72vh] top-[33.80vh] left-[28.96vw] gap-[2.50vw]">

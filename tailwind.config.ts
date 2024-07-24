@@ -10,27 +10,29 @@ const config: Config = {
     extend: {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        'custom-gradient': 'linear-gradient(115.51deg, #EEF7FF -4.44%, #CDE8E5 128.04%)'
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "custom-gradient":
+          "linear-gradient(115.51deg, #EEF7FF -4.44%, #CDE8E5 128.04%)",
       },
       lineHeight: {
-        'custom-21.79': '21.79px',
-        '27.24': '27.24px',
+        "custom-21.79": "21.79px",
+        "27.24": "27.24px",
       },
       fontWeight: {
-        '700': '700',
+        "700": "700",
       },
       fontSize: {
-        '20': ['20px', '27.24px'],
+        "20": ["20px", "27.24px"],
       },
       colors: {
-        "gradientColor1": "#EEF7FF",
-        "gradientColor2": "#CDE8E5",
-        "accent": "#4D869C",
-        "secondaryAccent": "#CDE8E5",
-        "hover": "#EEF7FF",
-        "heading": "#16262D",
-        "secondaryHeading": "#69817F",
+        gradientColor1: "#EEF7FF",
+        gradientColor2: "#CDE8E5",
+        accent: "#4D869C",
+        secondaryAccent: "#CDE8E5",
+        hover: "#EEF7FF",
+        heading: "#16262D",
+        secondaryHeading: "#69817F",
       },
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
