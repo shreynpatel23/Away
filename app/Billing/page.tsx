@@ -2,10 +2,9 @@
 import React from "react";
 import Header from "../components/Header/index";
 import PlanCard from "../components/plancard";
-import UpgradeBanner from "../components/upgradeBanner";
+import Banner from "../components/Banner";
 
-
-const Billing: React.FC = () => {
+const Billing = () => {
   const freeFeatures = [
     "One Calendar per account",
     "Fill up to 20% capacity",
@@ -21,12 +20,12 @@ const Billing: React.FC = () => {
   ];
 
   return (
-    <div className="font-sans">
+    <div className="w-full h-[100vh] overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-4 px-8">
       <Header />
-      <UpgradeBanner />
-      
+      <div className="mx-20 mb-14">
+        <Banner />
+      </div>
       <div className="flex justify-center gap-5 p-5">
-      
         <PlanCard title="Free Version" features={freeFeatures} isPro={false} />
         <PlanCard title="Pro Version" features={proFeatures} isPro={true} />
       </div>
