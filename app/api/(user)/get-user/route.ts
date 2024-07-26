@@ -13,7 +13,10 @@ export async function POST(req: NextRequest) {
 
     // Validate email presence
     if (!email) {
-      return new NextResponse(JSON.stringify({ error: "E-mail is required!" }), { status: 400 });
+      return new NextResponse(
+        JSON.stringify({ error: "E-mail is required!" }),
+        { status: 400 }
+      );
     }
 
     // Find user with given email from database
@@ -21,23 +24,19 @@ export async function POST(req: NextRequest) {
 
     // If user not found
     if (!user) {
-      return new NextResponse(JSON.stringify({ error: "User not found with given e-mail." }), { status: 404 });
+      return new NextResponse(
+        JSON.stringify({ error: "User not found with given e-mail." }),
+        { status: 404 }
+      );
     }
 
     // Return user with all the details
     return new NextResponse(JSON.stringify(user), { status: 200 });
   } catch (error) {
     console.error("Error while fetching user from database:", error);
-    return new NextResponse(JSON.stringify({ error: "Internal server error" }), { status: 500 });
-  }
-}
-
-// Function to handle other HTTP methods 
-export async function handler(req: NextRequest) {
-  // Route the request based on the HTTP method
-  if (req.method === "POST") {
-    return POST(req);
-  } else {
-    return new NextResponse(JSON.stringify({ error: "Method not allowed" }), { status: 405 });
+    return new NextResponse(
+      JSON.stringify({ error: "Internal server error" }),
+      { status: 500 }
+    );
   }
 }

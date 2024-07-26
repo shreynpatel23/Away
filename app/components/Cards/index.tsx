@@ -1,16 +1,6 @@
 import Link from "next/link";
-import Header from "../Header";
-import { ReactNode } from "react";
+import { CardsProps } from "./interface";
 
-interface CardsProps {
-  message: string;
-  description: string;
-  instructions: string;
-  credentials: string;
-  options: string;
-  checkin: string;
-  signInButton: ReactNode;
-}
 export default function Cards({
   message,
   description,
