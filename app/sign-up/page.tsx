@@ -1,5 +1,5 @@
 "use client";
-import Cards from "@/app/components/Cards/page";
+import Cards from "@/app/components/Cards";
 import { GoogleSignInButton } from "@/app/components/GoogleSignInButtom";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export default function SignupPage() {
     }
   }, [session]);
   return (
-    <>
+    <div className="w-full overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-4">
       <Cards
         message="Join Us Today!"
         description="Awayme helps users to set their free hours and make every look very busy"
@@ -25,6 +25,6 @@ export default function SignupPage() {
         checkin="Login"
         signInButton={<GoogleSignInButton />}
       />
-    </>
+    </div>
   );
 }
