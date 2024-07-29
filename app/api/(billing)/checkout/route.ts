@@ -2,10 +2,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!,);
+const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!);
 
 export async function POST(req: NextRequest) {
-    const { plan, userId } = await req.json();
+  const { plan, userId } = await req.json();
 
   let priceId: string | undefined;
   let mode: typeof PAYMENT_MODE | typeof SUBSCRIPTION_MODE;
@@ -36,12 +36,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-
     const metadata = {
-        userId: String(userId),  // Ensure it's a string
-        planType: String(plan),
-      };
-
+      userId: String(userId), // Ensure it's a string
+      planType: String(plan),
+    };
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -51,15 +49,14 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: mode as typeof SUBSCRIPTION_MODE | typeof PAYMENT_MODE,
-      billing_address_collection: 'required',
+      billing_address_collection: "required",
       success_url: `${process.env.BASE_URL}/payment-success`,
       cancel_url: `${process.env.BASE_URL}/account`,
-      metadata,  // Attach metadata here
+      metadata, // Attach metadata here
     });
 
     return NextResponse.json({ sessionUrl: session.url, metadata: metadata });
   } catch (error) {
-   
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
