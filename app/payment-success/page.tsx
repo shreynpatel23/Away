@@ -28,7 +28,7 @@ const PaymentSuccess: React.FC = () => {
                 <div className="flex justify-center">
                     <Button
                         buttonText="View your calendar"
-                        buttonClassName="bg-accent text-white px-10 py-3 rounded-lg hover:bg-hover shadow-button transition font-roboto font-medium"
+                        buttonClassName="bg-accent text-white px-10 py-3 rounded-lg hover:bg-hover hover:text-accent shadow-button transition font-roboto font-medium"
                         onClick={handleViewCalendar}
                     />
                 </div>
