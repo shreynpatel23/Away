@@ -48,7 +48,7 @@ const PlanDetails: React.FC = () => {
             </div>
             <div className="pt-8 pb-4">
               {features.map((feature, index) => (
-                <div className="flex items-center gap-4 py-2">
+                <div className="flex items-center gap-4 py-2" key={index}>
                   <img src="./Checkmark.png" alt="" className="w-8 h-8" />
                   <p className="text-base leading-base text-heading font-semibold">
                     {feature}
