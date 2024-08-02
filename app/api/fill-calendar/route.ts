@@ -11,8 +11,8 @@ function getRandomTime() {
   return { hour, minute };
 }
 
-function getRandomDuration() {
-  return Math.floor(Math.random() * 120) + 30; // Duration between 30 to 150 minutes
+function getRandomDuration(maxDuration: number) {
+  return Math.floor(Math.random() * Math.min(maxDuration, 120)) + 30; // Duration between 30 to 120 minutes, or less if maxDuration is smaller
 }
 
 function getRandomWeekday() {
@@ -33,10 +33,9 @@ function getRandomWeekday() {
 
 function calculateTotalAvailableSlots() {
   const workHoursPerDay = 8; // 9am - 5pm
-  const workDaysPerWeek = 5; // Monday to Friday
   const totalDays = 10; // Two weeks
 
-  return workHoursPerDay * workDaysPerWeek * totalDays * 60; // Total minutes
+  return workHoursPerDay * 60 * totalDays; // Total daytime minutes
 }
 
 function generateRandomEvents(targetMinutes: any) {
@@ -48,7 +47,7 @@ function generateRandomEvents(targetMinutes: any) {
     const { hour, minute } = getRandomTime();
     date.setHours(hour, minute, 0, 0);
 
-    const duration = getRandomDuration();
+    const duration = getRandomDuration(targetMinutes - totalMinutes);
     const endDate = new Date(date.getTime() + duration * 60000);
 
     events.push({
