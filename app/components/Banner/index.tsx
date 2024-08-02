@@ -1,7 +1,14 @@
 import React from "react";
 import Button from "../Button";
+import { BannerContextProvider, useBannerContext } from "@/app/context/bannerContext";
 
-export default function Banner() {
+function BannerContent() {
+  const { isPaidUser } = useBannerContext();
+
+  if (isPaidUser) {
+    return null;
+  }
+
   return (
     <div className="my-4 w-full flex items-center justify-center gap-8 p-6 bg-accent border border-accent rounded-[16px]">
       <p className="text-base text-white">
@@ -16,5 +23,13 @@ export default function Banner() {
         onClick={() => console.log("upgrade now clicked!")}
       />
     </div>
+  );
+}
+
+export default function Banner() {
+  return (
+    <BannerContextProvider>
+      <BannerContent />
+    </BannerContextProvider>
   );
 }
