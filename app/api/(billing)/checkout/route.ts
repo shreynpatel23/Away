@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode,
+       billing_address_collection: 'required',
       success_url: `${process.env.BASE_URL}/success`,
       cancel_url: `${process.env.BASE_URL}/cancel`,
     });
