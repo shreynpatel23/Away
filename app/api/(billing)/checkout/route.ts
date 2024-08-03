@@ -28,8 +28,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid plan type' }, { status: 400 });
   }
 
-  console.log("priceId is ------", priceId);
-
+  
   // Validate that priceId is not undefined
   if (!priceId) {
     return NextResponse.json({ error: 'Price ID not defined for the selected plan' }, { status: 400 });
