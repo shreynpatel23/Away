@@ -4,30 +4,39 @@ import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
-type BannerContextType = {
+type UserType = {
+  _id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
   isPaidUser: boolean;
-  setIsPaidUser: (status: boolean) => void;
+  __v: number;
 };
 
-const BannerContext = createContext<BannerContextType>({
-  isPaidUser: false,
-  setIsPaidUser: () => {},
+type UserContextType = {
+  user: UserType | null;
+  setUser: (user: UserType | null) => void;
+};
+
+const UserContext = createContext<UserContextType>({
+  user: null,
+  setUser: () => {},
 });
 
-export function BannerContextProvider({
+export function UserContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { data: session, status } = useSession();
-  const [isPaidUser, setIsPaidUser] = useState<boolean>(false);
+  const [user, setUser] = useState<UserType | null>(null);
 
   useEffect(() => {
     const fetchUserData = async (email: string) => {
       try {
         const response = await axios.post("/api/get-user", { email });
         if (response.status === 200) {
-          setIsPaidUser(response.data.isPaidUser);
+          setUser(response.data);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -40,13 +49,12 @@ export function BannerContextProvider({
   }, [session, status]);
 
   return (
-    <BannerContext.Provider value={{ isPaidUser, setIsPaidUser }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
-    </BannerContext.Provider>
+    </UserContext.Provider>
   );
 }
 
-export function useBannerContext() {
-  return useContext(BannerContext);
+export function useUserContext() {
+  return useContext(UserContext);
 }
-
