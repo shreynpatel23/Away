@@ -5,12 +5,12 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!);
 
 export async function POST(req: NextRequest) {
-  const { plan } = await req.json();
+  const { plan, userId } = await req.json();
 
   let priceId: string | undefined;
   let mode: "payment" | "subscription";
 
-  // Determine priceId and mode based on plan type
+  // priceId and mode based on plan type
   switch (plan) {
     case "lifetime":
       priceId = process.env.STRIPE_PRICE_ID_LIFETIME;
@@ -37,6 +37,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const metadata = {
+      userId: String(userId),  // Ensure it's a string
+      planType: String(plan),
+    };
+
+    console.log('Metadata before sending to Stripe:', metadata);
+
     // Create a Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -46,13 +53,16 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode,
-       billing_address_collection: 'required',
+      billing_address_collection: 'required',
       success_url: `${process.env.BASE_URL}/payment-success`,
       cancel_url: `${process.env.BASE_URL}/account`,
+      metadata,  // Attach metadata here
     });
 
+    console.log('Created Stripe session:', session);
+
     // Return the session URL to the frontend
-    return NextResponse.json({ sessionUrl: session.url });
+    return NextResponse.json({ sessionUrl: session.url, metadata: session.metadata });
   } catch (error) {
     console.error("Error creating Stripe session:", error);
     return NextResponse.json(
