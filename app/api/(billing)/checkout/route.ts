@@ -59,9 +59,7 @@ export async function POST(req: NextRequest) {
       metadata,  // Attach metadata here
     });
 
-    console.log('Created Stripe session:', session);
-
-    // Return the session URL to the frontend
+    // return the session URL to the frontend
     return NextResponse.json({ sessionUrl: session.url, metadata: session.metadata });
   } catch (error) {
     console.error("Error creating Stripe session:", error);
