@@ -6,10 +6,11 @@ import Banner from "../components/Banner";
 import MyCalendar from "../components/Calendar";
 import FillCalendarCard from "../components/FillCalendarCard";
 import Link from "next/link";
-import { UserContextProvider } from "@/app/context/userContext";
+import { useUserContext } from "@/app/context/userContext";
 
 export default function FillCalendar() {
   const router = useRouter();
+  const { user } = useUserContext();
   const [loading, setLoading] = useState(true);
   const [fillCalendarLoading, setFillCalendarLoading] = useState(false);
   const [events, setEvents] = useState([]);
@@ -87,40 +88,38 @@ export default function FillCalendar() {
   }
 
   return (
-    <UserContextProvider>
-      <div className="w-full h-[100vh] overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-4 px-8">
-        <Header />
-        <div className="w-[90%] mx-auto">
-          <div className="inline-block">
-            <Link href={`/view-calendar`}>
-              <div className="flex items-center gap-2">
-                <img
-                  src="/arrow-left.svg"
-                  alt="Arrow left icon"
-                  className="w-[20px]"
-                />
-                <p className="text-sm leading-sm text-heading">View Calendar</p>
-              </div>
-            </Link>
-          </div>
-          <Banner />
-          <div className="my-12 flex items-start gap-4">
-            <div className="w-[40%]">
-              <FillCalendarCard
-                onConfirm={() => {
-                  handleFillCalendar();
-                }}
-                onReFill={() => fetchComputedFill()}
+    <div className="w-full h-[100vh] overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-4 px-8">
+      <Header />
+      <div className="w-[90%] mx-auto">
+        <div className="inline-block">
+          <Link href={`/view-calendar`}>
+            <div className="flex items-center gap-2">
+              <img
+                src="/arrow-left.svg"
+                alt="Arrow left icon"
+                className="w-[20px]"
               />
+              <p className="text-sm leading-sm text-heading">View Calendar</p>
             </div>
-            <div className="w-[60%]">
-              <div className="bg-white p-4 rounded-[16px]">
-                <MyCalendar events={filteredEvents} />
-              </div>
+          </Link>
+        </div>
+        {!user?.isPaidUser && <Banner />}
+        <div className="my-12 flex items-start gap-4">
+          <div className="w-[40%]">
+            <FillCalendarCard
+              onConfirm={() => {
+                handleFillCalendar();
+              }}
+              onReFill={() => fetchComputedFill()}
+            />
+          </div>
+          <div className="w-[60%]">
+            <div className="bg-white p-4 rounded-[16px]">
+              <MyCalendar events={filteredEvents} />
             </div>
           </div>
         </div>
       </div>
-    </UserContextProvider>
+    </div>
   );
 }
