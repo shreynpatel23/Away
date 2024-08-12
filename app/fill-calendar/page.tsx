@@ -6,9 +6,11 @@ import Banner from "../components/Banner";
 import MyCalendar from "../components/Calendar";
 import FillCalendarCard from "../components/FillCalendarCard";
 import Link from "next/link";
+import { useUserContext } from "@/app/context/userContext";
 
 export default function FillCalendar() {
   const router = useRouter();
+  const { user } = useUserContext();
   const [loading, setLoading] = useState(true);
   const [fillCalendarLoading, setFillCalendarLoading] = useState(false);
   const [events, setEvents] = useState([]);
@@ -101,7 +103,7 @@ export default function FillCalendar() {
             </div>
           </Link>
         </div>
-        <Banner />
+        {!user?.isPaidUser && <Banner />}
         <div className="my-12 flex items-start gap-4">
           <div className="w-[40%]">
             <FillCalendarCard
