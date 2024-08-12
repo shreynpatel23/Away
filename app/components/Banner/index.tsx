@@ -1,8 +1,17 @@
 import React from "react";
 import Button from "../Button";
+import {
+  BannerContextProvider,
+  useBannerContext,
+} from "@/app/context/bannerContext";
 
+function BannerContent() {
+  const { isPaidUser } = useBannerContext();
 
-export default function Banner() {
+  if (isPaidUser) {
+    return null;
+  }
+
   return (
     <div className="my-4 w-full flex items-center justify-center gap-8 p-6 bg-accent border border-accent rounded-[16px]">
       <p className="text-base text-white">
