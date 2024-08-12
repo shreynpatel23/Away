@@ -15,7 +15,6 @@ export const config = {
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export const POST = async (req: NextRequest) => {
-  if (req.method === 'POST') {
 
     const buf = Buffer.from(await req.arrayBuffer());
     const sig = req.headers.get('stripe-signature')!;
@@ -61,10 +60,7 @@ export const POST = async (req: NextRequest) => {
 
       default:
         console.log(`Unhandled event type ${event.type}`);
-    }
 
     return new NextResponse('Received', { status: 200 });
-  } else {
-    return new NextResponse('Method Not Allowed', { status: 405, headers: { Allow: 'POST' } });
-  }
+  } 
 };
