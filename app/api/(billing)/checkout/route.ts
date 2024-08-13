@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const { plan, userId } = await req.json();
 
   let priceId: string | undefined;
-  let mode: "payment" | "subscription";
+  let mode: typeof PAYMENT_MODE | typeof SUBSCRIPTION_MODE;
 
   switch (plan) {
     case "lifetime":

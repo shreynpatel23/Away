@@ -2,6 +2,7 @@
 export interface Plan {
     name: string;
     features: string[];
+    planType: string;
     price? : string;
 }
 
@@ -12,6 +13,7 @@ export interface Plan {
 export const plans: Plan[] = [
     {
         name: "Free Version",
+        planType: "free",
         features: [
             "One Calendar per account",
             "Fill up to 20% capacity",
@@ -21,6 +23,7 @@ export const plans: Plan[] = [
     },
     {
         name: "AwayMe - Lifetime Subscription",
+        planType: "lifetime",
         features: [
           "One-time payment",
           "Unlimited Calendars per Account",
@@ -33,6 +36,7 @@ export const plans: Plan[] = [
       },
       {
         name: "AwayMe - Professional - Monthly",
+        planType: "monthly",
         features: [
           "Monthly subscription",
           "Up to 3 Calendars per Account",
@@ -44,6 +48,7 @@ export const plans: Plan[] = [
       },
       {
         name: "AwayMe - Professional - Annual",
+        planType: "annual",
         features: [
           "Annual subscription",
           "Up to 3 Calendars per Account",

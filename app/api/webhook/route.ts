@@ -38,8 +38,6 @@ export const POST = async (req: NextRequest) => {
         const email = session.metadata?.userId;
         const planType = session.metadata?.planType;
 
-
-
         if (email && planType) {
           
           try {
