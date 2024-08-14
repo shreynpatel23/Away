@@ -6,12 +6,6 @@ import ConnectDB from "@/lib/mongodb";
 
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!);
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export const POST = async (req: NextRequest) => {
