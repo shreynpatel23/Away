@@ -6,6 +6,7 @@ interface IUser extends Document {
   first_name: string;
   last_name: string;
   isPaidUser: boolean;
+  planType: string;
 }
 
 const UserSchema: Schema<IUser> = new Schema({
@@ -13,6 +14,7 @@ const UserSchema: Schema<IUser> = new Schema({
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
   isPaidUser: { type: Boolean, required: true },
+  planType: {type: String, reequired: false},
 });
 
 // model

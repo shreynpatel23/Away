@@ -1,28 +1,28 @@
 // app/api/checkout/route.ts
+import PAYMENT_CONSTANTS from "@/lib/constants";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!);
 
 export async function POST(req: NextRequest) {
-  const { plan } = await req.json();
+  const { plan, userId } = await req.json();
 
   let priceId: string | undefined;
-  let mode: "payment" | "subscription";
+  let mode: any;
 
-  // Determine priceId and mode based on plan type
   switch (plan) {
     case "lifetime":
       priceId = process.env.STRIPE_PRICE_ID_LIFETIME;
-      mode = "payment";
+      mode = PAYMENT_CONSTANTS.PAYMENT_MODE;
       break;
     case "monthly":
       priceId = process.env.STRIPE_PRICE_ID_MONTHLY;
-      mode = "subscription";
+      mode = PAYMENT_CONSTANTS.SUBSCRIPTION_MODE;
       break;
     case "annual":
       priceId = process.env.STRIPE_PRICE_ID_YEARLY;
-      mode = "subscription";
+      mode = PAYMENT_CONSTANTS.SUBSCRIPTION_MODE;
       break;
     default:
       return NextResponse.json({ error: "Invalid plan type" }, { status: 400 });
@@ -37,7 +37,11 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    // Create a Stripe Checkout Session
+    const metadata = {
+      userId: String(userId), // Ensure it's a string
+      planType: String(plan),
+    };
+
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -45,16 +49,15 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      mode,
-       billing_address_collection: 'required',
-      success_url: `${process.env.BASE_URL}/success`,
-      cancel_url: `${process.env.BASE_URL}/cancel`,
+      mode: mode,
+      billing_address_collection: "required",
+      success_url: `${process.env.BASE_URL}/payment-success`,
+      cancel_url: `${process.env.BASE_URL}/account`,
+      metadata, // Attach metadata here
     });
 
-    // Return the session URL to the frontend
-    return NextResponse.json({ sessionUrl: session.url });
+    return NextResponse.json({ sessionUrl: session.url, metadata: metadata });
   } catch (error) {
-    console.error("Error creating Stripe session:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
