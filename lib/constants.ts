@@ -1,5 +1,7 @@
-
 // constants for payment mode
-export const PAYMENT_MODE: "payment" = "payment";
-export const SUBSCRIPTION_MODE: "subscription" = "subscription";
+const PAYMENT_CONSTANTS = {
+  PAYMENT_MODE: "payment",
+  SUBSCRIPTION_MODE: "subscription",
+};
 
+export default PAYMENT_CONSTANTS;

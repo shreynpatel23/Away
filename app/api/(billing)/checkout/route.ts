@@ -1,4 +1,5 @@
 // app/api/checkout/route.ts
+import PAYMENT_CONSTANTS from "@/lib/constants";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -8,20 +9,20 @@ export async function POST(req: NextRequest) {
   const { plan, userId } = await req.json();
 
   let priceId: string | undefined;
-  let mode: typeof PAYMENT_MODE | typeof SUBSCRIPTION_MODE;
+  let mode: any;
 
   switch (plan) {
     case "lifetime":
       priceId = process.env.STRIPE_PRICE_ID_LIFETIME;
-      mode = PAYMENT_MODE;
+      mode = PAYMENT_CONSTANTS.PAYMENT_MODE;
       break;
     case "monthly":
       priceId = process.env.STRIPE_PRICE_ID_MONTHLY;
-      mode = SUBSCRIPTION_MODE;
+      mode = PAYMENT_CONSTANTS.SUBSCRIPTION_MODE;
       break;
     case "annual":
       priceId = process.env.STRIPE_PRICE_ID_YEARLY;
-      mode = SUBSCRIPTION_MODE;
+      mode = PAYMENT_CONSTANTS.SUBSCRIPTION_MODE;
       break;
     default:
       return NextResponse.json({ error: "Invalid plan type" }, { status: 400 });
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         },
       ],
-      mode: mode as typeof SUBSCRIPTION_MODE | typeof PAYMENT_MODE,
+      mode: mode,
       billing_address_collection: "required",
       success_url: `${process.env.BASE_URL}/payment-success`,
       cancel_url: `${process.env.BASE_URL}/account`,
