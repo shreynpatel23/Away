@@ -14,18 +14,25 @@ export async function POST(req: NextRequest) {
 
     // Validate email and name
     if (!email) {
-      return new NextResponse(JSON.stringify({ error: "E-mail is required!" }), { status: 400 });
+      return new NextResponse(
+        JSON.stringify({ error: "E-mail is required!" }),
+        { status: 400 }
+      );
     }
 
     if (!first_name || !last_name) {
-      return new NextResponse(JSON.stringify({ error: "Name is required!" }), { status: 400 });
+      return new NextResponse(JSON.stringify({ error: "Name is required!" }), {
+        status: 400,
+      });
     }
 
     // Check if the user already exists in the database
     const isExistingUser = await User.findOne({ email });
 
     if (isExistingUser) {
-      return new NextResponse(JSON.stringify("User already exists"), { status: 200 });
+      return new NextResponse(JSON.stringify("User already exists"), {
+        status: 200,
+      });
     }
 
     // If user is new, create a new user object
@@ -34,6 +41,7 @@ export async function POST(req: NextRequest) {
       first_name,
       last_name,
       isPaidUser: false, // By default making isPaidUser false
+      planType: "free",
     });
 
     // Save the new user to the database
@@ -43,7 +51,9 @@ export async function POST(req: NextRequest) {
     return new NextResponse(JSON.stringify(newUser), { status: 201 });
   } catch (error) {
     console.error("Error while adding user to database:", error);
-    return new NextResponse(JSON.stringify({ error: "Internal server error" }), { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ error: "Internal server error" }),
+      { status: 500 }
+    );
   }
 }
-

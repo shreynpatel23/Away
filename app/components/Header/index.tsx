@@ -28,32 +28,36 @@ export default function Header() {
   return (
     <div className="flex items-center gap-4 mb-4 py-4">
       <img src="/logo.png" alt="Away me logo" className="h-[40px]" />
-      <div className="ml-auto">
-        <div className="group relative">
+      <div className="ml-auto ">
+        <div className="flex items-center gap-8">
+          <Link
+            href="/view-calendar"
+            className="text-md leading-lg text-secondaryHeading hover:text-heading font-medium text-right"
+          >
+            View Calendar
+          </Link>
+          <Link
+            href="/account"
+            className="text-md leading-lg text-secondaryHeading hover:text-heading font-medium text-right"
+          >
+            My Account
+          </Link>
+          <Link
+            href="/billing"
+            className="text-md leading-lg text-secondaryHeading hover:text-heading font-medium text-right"
+          >
+            Billing Info
+          </Link>
           <img
             src={session?.user?.image || ""}
             alt=" User avatar image"
             className="w-[40px] rounded-full bg-gray-200"
           />
-          <div className="hidden group-hover:block">
-            <div className="absolute top-6 right-0 m-4 w-[150px] bg-white rounded-[16px] shadow-card p-4">
-              <div className="my-2">
-                <Link
-                  href="/account"
-                  className="text-lg leading-lg text-secondaryHeading hover:text-heading font-medium text-right"
-                >
-                  My Account
-                </Link>
-              </div>
-              <div className="flex justify-center my-4">
-                <Button
-                  buttonText="Logout"
-                  buttonClassName="rounded-md shadow-button hover:shadow-buttonHover bg-[#FDE4E4] hover:bg-[#913838] text-[#913838] hover:text-white text-base leading-base"
-                  onClick={() => handleLogout()}
-                />
-              </div>
-            </div>
-          </div>
+          <Button
+            buttonText="Logout"
+            buttonClassName="rounded-md shadow-button hover:shadow-buttonHover bg-[#FDE4E4] hover:bg-[#913838] text-[#913838] hover:text-white text-base leading-base"
+            onClick={() => handleLogout()}
+          />
         </div>
       </div>
     </div>

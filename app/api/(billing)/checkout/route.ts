@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       mode: mode,
       billing_address_collection: "required",
       success_url: `${process.env.BASE_URL}/payment-success`,
-      cancel_url: `${process.env.BASE_URL}/account`,
+      cancel_url: `${process.env.BASE_URL}/billing`,
       metadata, // Attach metadata here
     });
 
