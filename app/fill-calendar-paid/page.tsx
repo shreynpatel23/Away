@@ -4,23 +4,35 @@ import { useRouter } from "next/navigation";
 import Header from "../components/Header";
 import Banner from "../components/Banner";
 import MyCalendar from "../components/Calendar";
-import FillCalendarCard from "../components/FillCalendarCard";
 import { useUserContext } from "@/app/context/userContext";
+import FillCalendarForm from "../components/FillCalendarForm";
 import axios from "axios";
+import moment from "moment";
 
 export default function FillCalendar() {
   const router = useRouter();
   const { user } = useUserContext();
-  const [loading, setLoading] = useState(true);
+  const [state, setState] = useState({
+    fillPercentage: 20,
+    startDate: moment(new Date()).format("yyyy-MM-DD"),
+    endDate: moment(new Date()).add(14, "days").format("yyyy-MM-DD"),
+  });
+  const [loading, setLoading] = useState(false);
   const [fillCalendarLoading, setFillCalendarLoading] = useState(false);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
 
-  const fetchComputedFill = useCallback(async () => {
+  const { fillPercentage, startDate, endDate } = state;
+
+  const handlePopulateEvents = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("/api/fill-calendar");
-      const { data } = await response.data;
+      const response = await axios.post("/api/generate-paid-events", {
+        fillPercentage,
+        startDateStr: startDate,
+        endDateStr: endDate,
+      });
+      const { data } = response.data;
       setEvents(data);
       const updatedEvents = data?.map((eventData: any, index: number) => ({
         id: index + 1,
@@ -30,25 +42,24 @@ export default function FillCalendar() {
       }));
       setFilteredEvents(updatedEvents);
       setLoading(false);
+      //   if (response.status === 201) {
+      //     router.push("/view-calendar");
+      //   }
     } catch (err: any) {
-      console.error("Error in fetching events:", err);
+      console.error("Error in populating events:", err);
       if (err?.response?.status === 401) {
         return router.replace("/login");
       }
       setEvents([]);
       setLoading(false);
     }
-  }, []);
+  };
 
   const handleFillCalendar = async () => {
     setFillCalendarLoading(true);
     try {
-      const response = await fetch("/api/fill-calendar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ events }),
+      const response = await axios.post("/api/fill-calendar", {
+        events,
       });
       if (response.status === 401) {
         return router.replace("/login");
@@ -62,10 +73,6 @@ export default function FillCalendar() {
       setFillCalendarLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchComputedFill();
-  }, [fetchComputedFill]);
 
   if (loading) {
     return (
@@ -99,12 +106,22 @@ export default function FillCalendar() {
         <h1 className="text-2xl leading-2xl text-heading">Fill Calendar</h1>
         <div className="my-8 flex items-start gap-4">
           <div className="w-[40%]">
-            <FillCalendarCard
+            <FillCalendarForm
               onCancel={() => router.push("/view-calendar")}
-              onConfirm={() => {
-                handleFillCalendar();
+              onPopulate={() => {
+                handlePopulateEvents();
               }}
-              onReFill={() => fetchComputedFill()}
+              areEventsPopulated={filteredEvents.length > 0}
+              onReFill={() => setFilteredEvents([])}
+              onConfirm={() => handleFillCalendar()}
+              state={state}
+              setState={(value: any) => {
+                console.log(value);
+                setState((state) => ({
+                  ...state,
+                  ...value,
+                }));
+              }}
             />
           </div>
           <div className="w-[60%]">

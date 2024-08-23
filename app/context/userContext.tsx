@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
-type UserType = {
+export type UserType = {
   _id: string;
   email: string;
   first_name: string;
