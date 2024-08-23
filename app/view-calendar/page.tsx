@@ -6,6 +6,8 @@ import Banner from "../components/Banner";
 import { useRouter } from "next/navigation";
 import UserDetails from "../components/UserDetails";
 import { useUserContext } from "@/app/context/userContext";
+import Utils from "@/utils/utils";
+import axios from "axios";
 
 export default function ViewCalendar() {
   const { user } = useUserContext();
@@ -17,11 +19,8 @@ export default function ViewCalendar() {
     async function fetchAllEvents() {
       setLoading(true);
       try {
-        const response = await fetch("/api/fetch-calendar-events");
-        if (response.status === 401) {
-          return router.replace("/login");
-        }
-        const { data } = await response.json();
+        const response = await axios.get("/api/fetch-calendar-events");
+        const { data } = await response.data;
         const events = data?.map((eventData: any, index: number) => ({
           id: index + 1,
           title: eventData?.summary,
@@ -30,8 +29,11 @@ export default function ViewCalendar() {
         }));
         setEvents(events);
         setLoading(false);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Error in fetching events:", err);
+        if (err?.response?.status === 401) {
+          return router.replace("/login");
+        }
         setEvents([]);
         setLoading(false);
       }
@@ -51,15 +53,24 @@ export default function ViewCalendar() {
   }
 
   return (
-    <div className="w-full h-[100vh] overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-4 px-8">
+    <div className="w-full h-[100vh] overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-6 px-12">
       <Header />
-      <div className="w-[90%] mx-auto">
-        {!user?.isPaidUser && <Banner />}
-        <div className="my-12 flex items-start gap-4">
+      {!user?.isPaidUser && (
+        <div className="w-[90%] mx-auto">
+          <Banner />
+        </div>
+      )}
+      <div className="my-12">
+        <h1 className="text-2xl leading-2xl text-heading">
+          {Utils.capitalizeFirstLetter(user?.first_name || "")}'s Calendar
+        </h1>
+        <div className="my-8 flex items-start gap-4">
           <div className="w-[40%]">
             <UserDetails
               onFill={() => {
-                router.push("/fill-calendar");
+                user?.isPaidUser
+                  ? router.push("/fill-calendar-paid")
+                  : router.push("/fill-calendar");
               }}
             />
           </div>

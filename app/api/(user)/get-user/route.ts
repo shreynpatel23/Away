@@ -3,10 +3,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import ConnectDB from "@/lib/mongodb";
 import User from "@/models/User";
+import { EnrichedSession, auth } from "@/auth";
 
 // Function to handle POST requests
 export async function POST(req: NextRequest) {
   try {
+    const session = (await auth()) as EnrichedSession;
+
+    if (!session) {
+      return new NextResponse(
+        JSON.stringify({
+          message: "unauthorized!",
+        }),
+        { status: 401 }
+      );
+    }
     await ConnectDB(); // Connect to the database
 
     const { email } = await req.json(); // Extract email from request body

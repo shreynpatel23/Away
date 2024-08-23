@@ -11,10 +11,10 @@ export default function Header() {
   const [loading, setLoading] = useState(false);
 
   async function handleLogout() {
-    setLoading(true);
-    await signOut();
-    setLoading(false);
-    router.push("/login");
+    signOut({
+      redirect: true,
+      callbackUrl: "/login",
+    });
   }
 
   if (loading) {

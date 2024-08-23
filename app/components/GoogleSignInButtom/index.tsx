@@ -9,7 +9,10 @@ export function GoogleSignInButton() {
 
   const handleClick = async () => {
     if (session.status !== "authenticated") {
-      await signIn("google"); // will re-direct to sign in page
+      await signIn("google", {
+        redirect: true,
+        callbackUrl: "/view-calendar",
+      }); // will re-direct to sign in page
     } else {
       // navigate to view calendar page
       router.push("/view-calendar");

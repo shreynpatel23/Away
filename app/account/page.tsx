@@ -11,13 +11,17 @@ import NAV_TABS from "@/constants/navtabs";
 const Account = () => {
   const { user } = useUserContext();
   return (
-    <main className="w-full h-[100vh] overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-4 px-8">
+    <main className="w-full h-[100vh] overflow-y-auto bg-gradient-to-br from-gradientColor1 to-gradientColor2 py-6 px-12">
       <Header />
-      <div className="w-[90%] mx-auto">
-        <div className="mb-14">{!user?.isPaidUser && <Banner />}</div>
+      {!user?.isPaidUser && (
+        <div className="w-[90%] mx-auto">
+          <Banner />
+        </div>
+      )}
+      <div className="my-12">
         <h1 className="text-2xl leading-2xl text-heading">My Account</h1>
         <div className="my-8">
-          <Form />
+          <Form user={user} />
         </div>
       </div>
     </main>

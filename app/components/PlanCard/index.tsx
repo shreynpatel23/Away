@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "../Button";
 import { useUserContext } from "@/app/context/userContext";
 import axios from "axios";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 interface Plan {
   name: string;
   features: string[];
@@ -11,6 +11,7 @@ interface Plan {
 }
 
 const PlanDetails = () => {
+  const router = useRouter();
   const { user } = useUserContext();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,11 +26,14 @@ const PlanDetails = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await fetch("/api/get-plan-details");
-        const data = await response.json();
+        const response = await axios.get("/api/get-plan-details");
+        const { data } = await response.data;
         setPlans(data);
-      } catch (error) {
-        console.error("Error fetching plan details:", error);
+      } catch (err: any) {
+        console.error("Error fetching plan details:", err);
+        if (err?.response?.status === 401) {
+          return router.replace("/login");
+        }
       } finally {
         setLoading(false);
       }
@@ -42,11 +46,14 @@ const PlanDetails = () => {
     setCheckoutLoading({ planType, isLoading: true });
 
     try {
-      const { data } = await axios.post(`/api/checkout`, {
+      const response = await axios.post(`/api/checkout`, {
         plan: planType,
         userId: user?.email,
       });
-      const { sessionUrl } = data;
+      if (response.status === 401) {
+        return router.replace("/login");
+      }
+      const { sessionUrl } = response?.data;
       window.location.href = sessionUrl;
       setCheckoutLoading({ planType, isLoading: false });
     } catch (error) {
@@ -60,7 +67,7 @@ const PlanDetails = () => {
   }
 
   return (
-    <div className="flex space-x-4">
+    <div className="flex items-start flex-wrap gap-4">
       {plans.map(({ name, features, planType, price }, index) => {
         const isCurrentPlan =
           user?.planType?.toLowerCase() === planType.toLowerCase();
@@ -68,20 +75,22 @@ const PlanDetails = () => {
         return (
           <div
             key={index}
-            className="w-[350px] p-6 bg-white shadow-card rounded-[16px] relative"
+            className={`w-[300px] p-6 bg-white shadow-card rounded-[16px] relative ${
+              isCurrentPlan ? "border border-heading" : ""
+            }`}
           >
             <div className="h-24">
               <p className="text-base font-bold text-heading">{name}</p>
-              {isCurrentPlan && (
-                <div className="inline-block text-[10px] px-2 py-1 mt-2 rounded-[8px] bg-heading text-white font-bold">
-                  Current Plan
-                </div>
-              )}
               {!isPlanFree && (
                 <p className="text-sm mt-2 text-heading">Price: {price}</p>
               )}
+              {isCurrentPlan && (
+                <div className="absolute top-[-10px] right-[15px] inline-block text-xs px-2 py-1 rounded-[8px] bg-heading text-white font-bold">
+                  Current Plan
+                </div>
+              )}
             </div>
-            <hr className="mb-4" />
+            <hr className="my-4" />
             <div className="h-[300px]">
               {features.map((feature, index) => (
                 <div className="flex items-center gap-2 py-2" key={index}>
