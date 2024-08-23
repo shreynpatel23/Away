@@ -62,7 +62,7 @@ export default function ViewCalendar() {
       )}
       <div className="my-12">
         <h1 className="text-2xl leading-2xl text-heading">
-          {Utils.capitalizeFirstLetter(user?.first_name || "")}'s Calendar
+          {Utils.capitalizeFirstLetter(`${user?.first_name}'s` || "")} Calendar
         </h1>
         <div className="my-8 flex items-start gap-4">
           <div className="w-[40%]">
