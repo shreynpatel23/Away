@@ -21,6 +21,10 @@ export default function MyCalendar(props: ICalendarProps) {
         onView={(view: any) => setView(view)}
         localizer={localizer}
         events={events}
+        // start time 8:00am
+        min={new Date(date.getFullYear(), date.getMonth(), date.getDate(), 8)}
+        // end time 8:00pm
+        max={new Date(date.getFullYear(), date.getMonth(), date.getDate(), 21)}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 500 }}
